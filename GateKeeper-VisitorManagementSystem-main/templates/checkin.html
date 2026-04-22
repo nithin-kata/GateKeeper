@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GateKeeper – Visitor Check-In</title>
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+  <style>
+    :root {
+      --green:       #2BAE66;
+      --green-dark:  #1e8a4f;
+      --green-light: #e6f7ee;
+      --bg:          #F5F5F5;
+      --card-bg:     #FFFFFF;
+      --text:        #1a1a2e;
+      --muted:       #6c757d;
+      --border:      #dee2e6;
+      --shadow:      0 4px 20px rgba(43,174,102,.12);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    /* ── Navbar ───────────────────────────────────────────── */
+    .navbar {
+      background: var(--green) !important;
+      padding: .85rem 1.5rem;
+      box-shadow: 0 2px 10px rgba(43,174,102,.30);
+    }
+    .navbar-brand {
+      font-weight: 700; font-size: 1.3rem;
+      color: #fff !important; letter-spacing: -.3px;
+    }
+    .navbar-brand i { margin-right: 8px; }
+
+    /* ── Page layout ──────────────────────────────────────── */
+    .page-wrap {
+      min-height: calc(100vh - 64px);
+      display: flex; align-items: flex-start; justify-content: center;
+      padding: 2.5rem 1rem 3rem;
+    }
+    .form-container { width: 100%; max-width: 580px; }
+
+    /* ── Form Card ────────────────────────────────────────── */
+    .form-card {
+      background: var(--card-bg);
+      border-radius: 18px;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+    .form-card-header {
+      background: var(--green);
+      color: #fff;
+      padding: 1.8rem 2rem 1.4rem;
+    }
+    .form-card-header h4 {
+      font-weight: 700; font-size: 1.3rem; margin: 0 0 4px;
+    }
+    .form-card-header p {
+      margin: 0; font-size: .84rem; opacity: .85;
+    }
+    .form-card-header .icon-wrap {
+      width: 52px; height: 52px;
+      background: rgba(255,255,255,.2);
+      border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.6rem; margin-bottom: .9rem;
+    }
+    .form-body { padding: 2rem; }
+
+    /* ── Form Controls ────────────────────────────────────── */
+    .form-label {
+      font-size: .82rem; font-weight: 600;
+      color: #444; margin-bottom: .4rem;
+    }
+    .form-control, .form-select {
+      border: 1.5px solid var(--border);
+      border-radius: 10px;
+      font-size: .9rem;
+      padding: .62rem .9rem;
+      transition: border-color .2s, box-shadow .2s;
+      font-family: inherit;
+    }
+    .form-control:focus, .form-select:focus {
+      border-color: var(--green);
+      box-shadow: 0 0 0 3px rgba(43,174,102,.15);
+      outline: none;
+    }
+    .form-control::placeholder { color: #b0b8c1; }
+
+    /* Input icon groups */
+    .input-group-text {
+      background: var(--green-light);
+      border: 1.5px solid var(--border);
+      border-right: none;
+      color: var(--green);
+      border-radius: 10px 0 0 10px;
+      padding: .62rem .9rem;
+    }
+    .input-group .form-control {
+      border-left: none;
+      border-radius: 0 10px 10px 0;
+    }
+    .input-group .form-control:focus { border-color: var(--green); }
+
+    /* ── Error Alert ─────────────────────────────────────── */
+    .alert-gk {
+      background: #fff3f3;
+      border: 1px solid #f5c2c2;
+      border-radius: 10px;
+      padding: .9rem 1.1rem;
+      color: #c0392b;
+      font-size: .84rem;
+    }
+    .alert-gk i { margin-right: 6px; }
+
+    /* ── Submit Button ───────────────────────────────────── */
+    .btn-submit {
+      background: var(--green);
+      color: #fff;
+      border: none;
+      font-weight: 700;
+      font-size: .95rem;
+      padding: .72rem 1.5rem;
+      border-radius: 10px;
+      width: 100%;
+      transition: background .2s, transform .15s;
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+    }
+    .btn-submit:hover {
+      background: var(--green-dark);
+      transform: translateY(-1px);
+    }
+    .btn-submit:active { transform: translateY(0); }
+
+    /* ── Back Link ───────────────────────────────────────── */
+    .back-link {
+      display: inline-flex; align-items: center; gap: 5px;
+      color: var(--green); font-weight: 600; font-size: .85rem;
+      text-decoration: none; margin-bottom: 1.2rem;
+    }
+    .back-link:hover { color: var(--green-dark); }
+
+    /* ── Divider ─────────────────────────────────────────── */
+    .form-divider {
+      border: none; border-top: 1px dashed var(--border);
+      margin: 1.4rem 0;
+    }
+
+    /* ── Step indicator ──────────────────────────────────── */
+    .step-label {
+      font-size: .72rem; font-weight: 700;
+      text-transform: uppercase; letter-spacing: .6px;
+      color: var(--green); margin-bottom: .7rem;
+      display: flex; align-items: center; gap: 7px;
+    }
+    .step-label::after {
+      content: ''; flex: 1;
+      height: 1px; background: var(--green-light);
+    }
+
+    footer {
+      text-align: center; padding: 1.5rem 0;
+      font-size: .78rem; color: var(--muted);
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- ── Navbar ──────────────────────────────────────────────────────────── -->
+  <nav class="navbar navbar-expand-lg">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="/">
+        <i class="bi bi-shield-check-fill"></i>GateKeeper
+      </a>
+      <div class="d-flex align-items-center ms-auto gap-3">
+        {% if user %}
+        <div class="nav-meta text-white" style="font-size: 0.85rem;">
+          <i class="bi bi-person-circle me-1"></i>
+          Hi, <strong>{{ user.name }}</strong>
+        </div>
+        <a href="/logout" class="btn btn-sm btn-outline-light border-0" style="font-size: 0.8rem;">
+          <i class="bi bi-box-arrow-right me-1"></i>Logout
+        </a>
+        {% endif %}
+      </div>
+    </div>
+  </nav>
+
+  <!-- ── Page Body ────────────────────────────────────────────────────────── -->
+  <div class="page-wrap">
+    <div class="form-container">
+
+      <!-- Back to dashboard -->
+      <a href="/" class="back-link">
+        <i class="bi bi-arrow-left-circle-fill"></i> Back to Dashboard
+      </a>
+
+      <div class="form-card">
+
+        <!-- Card Header -->
+        <div class="form-card-header">
+          <div class="icon-wrap"><i class="bi bi-person-badge"></i></div>
+          <h4>Visitor Check-In</h4>
+          <p>Please fill in the details below to register your visit</p>
+        </div>
+
+        <!-- Card Body / Form -->
+        <div class="form-body">
+
+          <!-- Validation Errors -->
+          {% if errors %}
+          <div class="alert-gk mb-4">
+            <i class="bi bi-exclamation-circle-fill"></i>
+            <strong>Please fix the following:</strong>
+            <ul class="mb-0 mt-1 ps-3">
+              {% for e in errors %}<li>{{ e }}</li>{% endfor %}
+            </ul>
+          </div>
+          {% endif %}
+
+          <form method="POST" action="/checkin" novalidate>
+
+            <!-- ── Section 1: Visitor Info ──────────────────────── -->
+            <div class="step-label">Visitor Information</div>
+
+            <!-- Full Name -->
+            <div class="mb-3">
+              <label class="form-label" for="name">
+                <i class="bi bi-person me-1" style="color:var(--green);"></i>Full Name
+              </label>
+              <div class="input-group">
+                <span class="input-group-text"><i class="bi bi-person-fill"></i></span>
+                <input
+                  type="text" id="name" name="name"
+                  class="form-control"
+                  placeholder="e.g. Ravi Kumar"
+                  value="{{ form_data.name if form_data else '' }}"
+                  required
+                />
+              </div>
+            </div>
+
+            <!-- Phone Number -->
+            <div class="mb-3">
+              <label class="form-label" for="phone">
+                <i class="bi bi-phone me-1" style="color:var(--green);"></i>Phone Number
+              </label>
+              <div class="input-group">
+                <span class="input-group-text"><i class="bi bi-telephone-fill"></i></span>
+                <input
+                  type="tel" id="phone" name="phone"
+                  class="form-control"
+                  placeholder="e.g. 9876543210"
+                  value="{{ form_data.phone if form_data else '' }}"
+                  required
+                />
+              </div>
+            </div>
+
+            <hr class="form-divider" />
+
+            <!-- ── Section 2: Visit Details ─────────────────────── -->
+            <div class="step-label">Visit Details</div>
+
+            <!-- Host Name -->
+            <div class="mb-3">
+              <label class="form-label" for="host_name">
+                <i class="bi bi-person-workspace me-1" style="color:var(--green);"></i>Host Name
+              </label>
+              <div class="input-group">
+                <span class="input-group-text"><i class="bi bi-briefcase-fill"></i></span>
+                <select id="host_name" name="host_name" class="form-select" style="border-left:none;border-radius:0 10px 10px 0;" required>
+                  <option value="">— Select a Host —</option>
+                  {% for host in hosts %}
+                  <option value="{{ host }}"
+                    {% if form_data and form_data.host_name == host %}selected{% endif %}>
+                    {{ host }}
+                  </option>
+                  {% endfor %}
+                </select>
+              </div>
+            </div>
+
+            <!-- Purpose of Visit -->
+            <div class="mb-4">
+              <label class="form-label" for="purpose">
+                <i class="bi bi-chat-text me-1" style="color:var(--green);"></i>Purpose of Visit
+              </label>
+              <div class="input-group">
+                <span class="input-group-text"><i class="bi bi-card-text"></i></span>
+                <input
+                  type="text" id="purpose" name="purpose"
+                  class="form-control"
+                  placeholder="e.g. Job Interview, Delivery, Meeting…"
+                  value="{{ form_data.purpose if form_data else '' }}"
+                  required
+                />
+              </div>
+            </div>
+
+            <!-- Submit Button -->
+            <button type="submit" class="btn-submit">
+              <i class="bi bi-check2-circle"></i> Complete Check-In
+            </button>
+
+          </form>
+        </div>
+      </div><!-- /form-card -->
+
+    </div>
+  </div>
+
+  <footer>&copy; 2024 GateKeeper · Visitor Management System</footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

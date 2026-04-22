@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GateKeeper | Modern Visitor Management</title>
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+
+    <style>
+        :root {
+            --primary-color: #2BAE66;
+            --primary-dark: #1e8a4f;
+            --primary-light: #e6f7ee;
+            --text-dark: #1a1a1a;
+            --text-muted: #666;
+            --bg-light: #f8fbf9;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: white;
+            color: var(--text-dark);
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1140px;
+        }
+
+        /* Navbar */
+        .navbar {
+            padding: 1.2rem 0;
+            background: transparent;
+            transition: all 0.3s ease;
+        }
+
+        .navbar.scrolled {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 0.8rem 0;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+        }
+
+        .navbar-brand {
+            font-weight: 700;
+            font-size: 1.5rem;
+            color: var(--primary-color) !important;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* Hero */
+        .hero-section {
+            padding: 140px 0 100px;
+            background: radial-gradient(circle at 90% 10%, var(--primary-light) 0%, transparent 40%);
+            min-height: 85vh;
+            display: flex;
+            align-items: center;
+        }
+
+        .hero-title {
+            font-size: 3rem;
+            font-weight: 800;
+            line-height: 1.25;
+            margin-bottom: 1.2rem;
+        }
+
+        .hero-title span {
+            color: var(--primary-color);
+        }
+
+        .hero-subtitle {
+            font-size: 1.1rem;
+            color: var(--text-muted);
+            margin-bottom: 2rem;
+            max-width: 480px;
+        }
+
+        .btn-primary-custom {
+            background-color: var(--primary-color);
+            border: none;
+            color: white;
+            padding: 12px 28px;
+            font-weight: 600;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary-custom:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(43, 174, 102, 0.2);
+        }
+
+        .btn-outline-custom {
+            border: 2px solid var(--primary-color);
+            color: var(--primary-color);
+            background: transparent;
+            padding: 10px 28px;
+            font-weight: 600;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-outline-custom:hover {
+            background-color: var(--primary-light);
+            color: var(--primary-dark);
+        }
+
+        .hero-section img {
+            max-width: 95%;
+            margin-left: auto;
+            display: block;
+        }
+
+        /* Features */
+        .features-section {
+            padding: 90px 0;
+            background-color: var(--bg-light);
+        }
+
+        .section-tag {
+            color: var(--primary-color);
+            text-transform: uppercase;
+            font-weight: 700;
+            font-size: 0.9rem;
+            letter-spacing: 2px;
+            margin-bottom: 1rem;
+            display: block;
+        }
+
+        .section-title {
+            font-weight: 800;
+            font-size: 2.2rem;
+            margin-bottom: 2.5rem;
+        }
+
+        .feature-card {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            border: 1px solid rgba(0,0,0,0.03);
+            transition: all 0.3s ease;
+            height: 100%;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.05);
+        }
+
+        .feature-icon {
+            width: 55px;
+            height: 55px;
+            background-color: var(--primary-light);
+            color: var(--primary-color);
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.4rem;
+            margin-bottom: 1.2rem;
+        }
+
+        /* Floating animation */
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-15px); }
+            100% { transform: translateY(0px); }
+        }
+
+        .floating-img {
+            animation: float 6s ease-in-out infinite;
+        }
+
+        /* Footer */
+        footer {
+            padding: 40px 0;
+            border-top: 1px solid #eee;
+        }
+
+        /* Laptop refinement */
+        @media (min-width: 1200px) {
+            .hero-title {
+                font-size: 3.2rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg fixed-top" id="mainNav">
+    <div class="container">
+        <a class="navbar-brand" href="/">
+            <i class="bi bi-shield-check"></i> GateKeeper
+        </a>
+
+        <button class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto gap-2">
+                <li class="nav-item">
+                    <a class="nav-link btn btn-outline-custom px-4 border-0" href="/login">Login</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link btn btn-primary-custom px-4" href="/signup">Sign Up</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<!-- Hero -->
+<section class="hero-section">
+    <div class="container">
+        <div class="row align-items-center">
+            
+            <div class="col-lg-6">
+                <span class="section-tag">Secure. Seamless. Smart.</span>
+
+                <h1 class="hero-title">
+                    Elevate Your <br> <span>Visitor Experience</span>
+                </h1>
+
+                <p class="hero-subtitle">
+                    Streamline check-ins, automate notifications, and enhance workplace security with our modern visitor management solution.
+                </p>
+
+                <div class="d-flex gap-3">
+                    <a href="/signup" class="btn btn-primary-custom btn-lg">Get Started Free</a>
+                    <a href="#features" class="btn btn-outline-custom btn-lg">Learn More</a>
+                </div>
+            </div>
+
+            <div class="col-lg-6 d-none d-lg-block">
+                <img src="https://www.heatwavevisual.com.au/cdn/shop/files/Black-Black_Ultra-Front_2530da8c-54a2-4f56-a98d-3e2c9b5c2f51_2000x_jpg_1200x.webp?v=1707470637"
+                     class="img-fluid floating-img rounded-4">
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<!-- Features -->
+<section class="features-section" id="features">
+    <div class="container">
+
+        <div class="text-center mb-5">
+            <span class="section-tag">Our Features</span>
+            <h2 class="section-title">Built for Modern Workspaces</h2>
+        </div>
+
+        <div class="row g-4">
+
+            <div class="col-md-4">
+                <div class="feature-card">
+                    <div class="feature-icon"><i class="bi bi-person-plus"></i></div>
+                    <h4>Seamless Check-In</h4>
+                    <p class="text-muted">A beautiful, intuitive interface for visitors to register their arrival in seconds.</p>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="feature-card">
+                    <div class="feature-icon"><i class="bi bi-bell"></i></div>
+                    <h4>Instant Notifications</h4>
+                    <p class="text-muted">Hosts receive automatic email notifications via AWS SNS as soon as their visitor arrives.</p>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="feature-card">
+                    <div class="feature-icon"><i class="bi bi-graph-up"></i></div>
+                    <h4>Real-time Dashboard</h4>
+                    <p class="text-muted">Monitor active visitors, track logs, and manage check-outs from a centralized admin panel.</p>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<!-- Footer -->
+<footer class="bg-white">
+    <div class="container text-center">
+        <p class="mb-0 text-muted">&copy; 2026 GateKeeper System. All rights reserved.</p>
+    </div>
+</footer>
+
+<!-- JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+    window.addEventListener('scroll', function() {
+        const nav = document.getElementById('mainNav');
+        if (window.scrollY > 50) {
+            nav.classList.add('scrolled');
+        } else {
+            nav.classList.remove('scrolled');
+        }
+    });
+</script>
+
+</body>
+</html>
