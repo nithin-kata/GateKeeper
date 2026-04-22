@@ -22,6 +22,13 @@ from boto3.dynamodb.conditions import Key
 from flask import Flask, redirect, render_template, request, session, url_for, flash
 from werkzeug.security import generate_password_hash, check_password_hash
 
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
+
+AWS_ACCESS_KEY_ID = os.getenv("AKIAVDHC7ACWKNYF5QGA")
+
 # ── App Setup ─────────────────────────────────────────────────────────────────
 app = Flask(__name__)
 app.secret_key = "gatekeeper-secret-key-change-in-production-2024"
